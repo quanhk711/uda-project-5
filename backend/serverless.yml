@@ -193,8 +193,8 @@ functions:
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
-  RemoveImage:
-    handler: src/lambda/http/removeImage.handler
+  RemoveImageAttachment:
+    handler: src/lambda/http/removeImageAttachment.handler
     events:
       - http:
           method: post

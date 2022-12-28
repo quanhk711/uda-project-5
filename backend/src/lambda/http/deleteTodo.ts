@@ -6,7 +6,7 @@ import { cors, httpErrorHandler } from 'middy/middlewares'
 
 import { deleteTodo } from '../../businessLogic/todos'
 import { getUserId } from '../utils'
-import { removeAttachment } from '../../helpers/AttachmentUtils'
+import { removeImageAttachment } from '../../helpers/AttachmentUtils'
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -14,7 +14,7 @@ export const handler = middy(
     // TODO: Remove a TODO item by id
     const userId: string = getUserId(event);
     await deleteTodo(userId, todoId);
-    await removeAttachment(todoId);
+    await removeImageAttachment(todoId);
 
 
     return {

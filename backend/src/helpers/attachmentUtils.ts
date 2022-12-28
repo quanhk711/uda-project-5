@@ -74,7 +74,7 @@ export async function createAttachmentPresignedUrl(todoId: string,userId: string
   }
 
 // Remove Attachment  
-export async function removeAttachment(id: string): Promise<void> {
+export async function removeImageAttachment(id: string): Promise<void> {
     const params = {
       Bucket: S3Bucket,
       Key: id

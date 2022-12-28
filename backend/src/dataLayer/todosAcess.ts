@@ -89,7 +89,7 @@ export class TodoAccess {
         return;
       }
 
-      async removeAttachment(userId: string, todoId: string): Promise<void> {
+      async removeImageAttachment(userId: string, todoId: string): Promise<void> {
         await this.docClient.update({
           TableName: this.todosTable,
           Key: { todoId, userId },

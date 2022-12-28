@@ -4,7 +4,7 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { getUserId } from '../utils';
 
-import { removeAttachment } from '../../helpers/attachmentUtils'
+import { removeImageAttachment } from '../../helpers/attachmentUtils'
 import { TodoAccess } from '../../dataLayer/todosAcess'
 
 
@@ -14,9 +14,9 @@ export const handler = middy(
     const { todoId, s3Key } = payload;
     const userId: string = getUserId(event);
     // Remove Image from S3 bucket
-    await removeAttachment(s3Key);
+    await removeImageAttachment(s3Key);
     const aTodoAccess = new TodoAccess();
-    await aTodoAccess.removeAttachment(userId, todoId);
+    await aTodoAccess.removeImageAttachment(userId, todoId);
 
     return {
       statusCode: 200,

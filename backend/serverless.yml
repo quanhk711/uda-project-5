@@ -1,6 +1,6 @@
 org: quannhm
-app: serverless-todo-app
-service: serverless-todo-app
+app: uda-project-5
+service: uda-project-5
 
 plugins:
   - serverless-webpack
@@ -185,6 +185,7 @@ functions:
         Action:
           - s3:PutObject
           - s3:GetObject
+          - '*'
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak/*
       - Effect: Allow
         Action:

@@ -24,9 +24,9 @@ provider:
     apiGateway: true
 
   environment:
-    TODOS_TABLE: vubuiquang-todos-${self:provider.stage}
+    TODOS_TABLE: quannhm-todos-${self:provider.stage}
     TODOS_INDEX: UserIdIndex
-    ATTACHMENT_S3_BUCKET: vubuiquang-serverless-todo-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: quannhm-serverless-todo-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300ss
 
   logs:
@@ -163,7 +163,7 @@ functions:
       - Effect: Allow
         Action:
           - s3:DeleteObject
-        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak/*
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
 #   # TODO: Configure this function
 #   # Provide property for setting up CORS, Authorizer, iamRoleStatements
@@ -185,8 +185,9 @@ functions:
         Action:
           - s3:PutObject
           - s3:GetObject
+          - s3:GetSignedUrl
           - '*'
-        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak/*
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
       - Effect: Allow
         Action:
           - dynamodb:DeleteItem
@@ -214,7 +215,7 @@ functions:
           - s3:PutObject
           - s3:GetObject
           - s3:DeleteObject
-        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak/*
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
       - Effect: Allow
         Action:
           - dynamodb:DeleteItem
@@ -282,7 +283,7 @@ resources:
     AttachmentsBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak
+        BucketName: ${self:provider.environment.ATTACHMENT_S3_BUCKET}
         CorsConfiguration:
           CorsRules:
             -
@@ -312,5 +313,5 @@ resources:
               Effect: Allow
               Principal: '*'
               Action: 's3:GetObject'
-              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}-pp1fadhjkadsflak/*'
+              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*'
         Bucket: !Ref AttachmentsBucket

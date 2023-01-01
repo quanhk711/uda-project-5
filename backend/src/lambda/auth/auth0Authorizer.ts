@@ -52,43 +52,32 @@ export const handler = async (
   }
 }
 
-
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
-  const jwt: Jwt = decode(token, { complete: true }) as Jwt
-
+  
   // TODO: Implement token verification
-  let res = await Axios.get(jwksUrl);
-  if (!token)
-    throw new Error('Can not find authentication header')
-
-  // get keys
-  const keys = await res['data']['keys']
-
-  //get x5c data 
-  const data = await res['data']['keys'][0]['x5c'][0];
-
   // You should implement it similarly to how it was implemented for the exercise for the lesson 5
   // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
+  const response = await Axios.get(jwksUrl);
+  const jwks = response.data;
+  const keys:any[] = jwks.keys;
+  // Decode the JWT and grab the kid property from the header.
+  const jwt: Jwt = decode(token, { complete: true }) as Jwt
+  //Find the signing key in the filtered JWKS with a matching kid property.  
   const signingKey = keys.find(key => key.kid === jwt.header.kid);
-  if (!signingKey)
-  throw new Error('Can not find signingKey')
-
-  // convert data to cert
-  const cert = await `-----BEGIN CERTIFICATE-----\n${data}\n-----END CERTIFICATE-----`
-
-  return verify(token, cert, { algorithms: ['RS256'] }) as JwtPayload
+  let certValue:string = signingKey.x5c[0];
+  
+  certValue = certValue.match(/.{1,64}/g).join('\n');
+  const finalCertKey:string = `-----BEGIN CERTIFICATE-----\n${certValue}\n-----END CERTIFICATE-----\n`;
+ 
+  let jwtPayload:JwtPayload = verify(token, finalCertKey, { algorithms: ['RS256'] }) as JwtPayload; 
+  return jwtPayload;
 }
-
-
 function getToken(authHeader: string): string {
   if (!authHeader) throw new Error('No authentication header')
-
   if (!authHeader.toLowerCase().startsWith('bearer '))
     throw new Error('Invalid authentication header')
-
   const split = authHeader.split(' ')
   const token = split[1]
-
   return token
 }
